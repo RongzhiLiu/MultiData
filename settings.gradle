@@ -13,7 +13,6 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "MultiData"
-include ':sample'
 include ':multidata'
 include ':annotation'
 include ':processor'
