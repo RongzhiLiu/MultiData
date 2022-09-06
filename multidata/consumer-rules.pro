@@ -1,0 +1,2 @@
+-keep interface com.lrz.multi.Interface.** { *; }
+-keep class * extends  com.lrz.multi.Interface.IMultiData

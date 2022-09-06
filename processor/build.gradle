@@ -1,0 +1,15 @@
+plugins {
+    id 'java-library'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation project(':annotation')
+    implementation "com.squareup:javapoet:1.9.0"
+    implementation "com.google.auto.service:auto-service:1.0-rc3"
+    annotationProcessor "com.google.auto.service:auto-service:1.0-rc3"
+}
