@@ -1,7 +1,8 @@
 package com.lrz.multi;
 
 
-import android.app.Application;
+
+import android.content.Context;
 
 import com.lrz.multi.Interface.IMultiData;
 import com.lrz.multi.annotation.OnMultiDataListener;
@@ -13,7 +14,7 @@ import java.util.Set;
 
 public class MultiDataManager {
     public static final MultiDataManager MANAGER = new MultiDataManager();
-    private Application application;
+    private static Context context;
     OnMultiDataListener customerListener;
     final OnMultiDataListener defaultListener = new OnMultiDataListener() {
         @Override
@@ -47,7 +48,7 @@ public class MultiDataManager {
             } else if (value instanceof IMultiData) {
                 //不是sp支持的基本类型，则走读表
                 //根据imp类找到 原始类
-                Map<Class, Class> map = MultiData.MULTI_DATA.getClassHash();
+                Map<Class, Class> map = MultiData.DATA.getClassHash();
                 if (map == null) return value;
                 Class realClass = null;
                 for (Map.Entry<Class, Class> entry : map.entrySet()) {
@@ -56,7 +57,7 @@ public class MultiDataManager {
                         break;
                     }
                 }
-                return realClass == null ? value : (T) MultiData.MULTI_DATA.get(realClass);
+                return realClass == null ? value : (T) MultiData.DATA.get(realClass);
             } else {
                 if (customerListener != null) {
                     return customerListener.onLoad(table, key, value);
@@ -64,6 +65,11 @@ public class MultiDataManager {
                     return MultiDataUtil.get(table, key, value);
                 }
             }
+        }
+
+        @Override
+        public void onClear(String table) {
+            MultiDataUtil.clear(table);
         }
     };
 
@@ -83,13 +89,13 @@ public class MultiDataManager {
      *
      * @see com.lrz.multi.annotation.Table 中 delay = false
      */
-    public void initPre(Application application) {
-        if (application == null) return;
-        this.application = application;
-        MultiData.MULTI_DATA.initPre();
+    public static void initPre(Context app) {
+        if (app == null) return;
+        context = app;
+        MultiData.DATA.initPre();
     }
 
-    public Application getApplication() {
-        return application;
+    public Context getContext() {
+        return context;
     }
 }

@@ -2,6 +2,9 @@ package com.lrz.multi;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.Process;
 import android.text.TextUtils;
 
@@ -33,7 +36,7 @@ public class MultiDataUtil {
      * @see MultiDataUtil#putAsy(String, String, Object
      */
     public static void putAsy(final String table, final String key, final Object value) {
-        final Context context = MultiDataManager.MANAGER.getApplication();
+        final Context context = MultiDataManager.MANAGER.getContext();
         if (context == null || value == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table))
             return;
         getHandlerThread().execute(new Runnable() {
@@ -65,7 +68,7 @@ public class MultiDataUtil {
      * @param value 值
      */
     public static <T> void put(String table, String key, T value) {
-        final Context context = MultiDataManager.MANAGER.getApplication();
+        final Context context = MultiDataManager.MANAGER.getContext();
         if (context == null || value == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table))
             return;
         SharedPreferences sharedPreferences = getSp(context, table);
@@ -94,7 +97,7 @@ public class MultiDataUtil {
      * @return <V>
      */
     public static <V> V get(String table, String key, V value) {
-        final Context context = MultiDataManager.MANAGER.getApplication();
+        final Context context = MultiDataManager.MANAGER.getContext();
         if (context == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table)) return value;
         SharedPreferences sharedPreferences = getSp(context, table);
         V v = value;
@@ -126,7 +129,7 @@ public class MultiDataUtil {
     }
 
     public static <K, V> Map<K, V> getHash(String table, String key, Map<K, V> value) {
-        final Context context = MultiDataManager.MANAGER.getApplication();
+        final Context context = MultiDataManager.MANAGER.getContext();
         if (context == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table)) return value;
         String json = getSp(context, table).getString(key, "");
         Map<K, V> map = GSON.fromJson(json, new TypeToken<Map<K, V>>() {
@@ -135,7 +138,7 @@ public class MultiDataUtil {
     }
 
     public static <K> List<K> getList(String table, String key, List<K> value) {
-        final Context context = MultiDataManager.MANAGER.getApplication();
+        final Context context = MultiDataManager.MANAGER.getContext();
         if (context == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table)) return value;
         String json = getSp(context, table).getString(key, "");
         List<K> map = GSON.fromJson(json, new TypeToken<List<K>>() {
@@ -144,7 +147,7 @@ public class MultiDataUtil {
     }
 
     public static <K> Set<K> getSet(String table, String key, Set<K> value) {
-        final Context context = MultiDataManager.MANAGER.getApplication();
+        final Context context = MultiDataManager.MANAGER.getContext();
         if (context == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table)) return value;
         String json = getSp(context, table).getString(key, "");
         Set<K> map = GSON.fromJson(json, new TypeToken<Set<K>>() {
@@ -152,34 +155,12 @@ public class MultiDataUtil {
         return map == null ? value : map;
     }
 
-    public static String getString(String table, String key, String value) {
-        final Context context = MultiDataManager.MANAGER.getApplication();
-        if (context == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table)) return value;
-        return getSp(context, table).getString(key, value);
-    }
-
-    public static int getInt(String table, String key, int value) {
-        final Context context = MultiDataManager.MANAGER.getApplication();
-        if (context == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table)) return value;
-        return getSp(context, table).getInt(key, value);
-    }
-
-    public static long getLong(String table, String key, long value) {
-        final Context context = MultiDataManager.MANAGER.getApplication();
-        if (context == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table)) return value;
-        return getSp(context, table).getLong(key, value);
-    }
-
-    public static float getFloat(String table, String key, float value) {
-        final Context context = MultiDataManager.MANAGER.getApplication();
-        if (context == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table)) return value;
-        return getSp(context, table).getFloat(key, value);
-    }
-
-    public static boolean getBoolean(String table, String key, boolean value) {
-        final Context context = MultiDataManager.MANAGER.getApplication();
-        if (context == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table)) return value;
-        return getSp(context, table).getBoolean(key, value);
+    public static void clear(String table) {
+        getHandlerThread().execute(() -> {
+            final Context context = MultiDataManager.MANAGER.getContext();
+            if (context == null || TextUtils.isEmpty(table)) return;
+            getSp(context, table).edit().clear().commit();
+        });
     }
 
     private static SharedPreferences getSp(Context context, String table) {
@@ -255,5 +236,18 @@ public class MultiDataUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private final static Handler mainHandler = new Handler(Looper.getMainLooper());
+
+    public static void postTask(Runnable runnable) {
+        Message m = Message.obtain(mainHandler, runnable);
+        //hasJob()只会检测what=0的任务
+        m.what = runnable.hashCode();
+        mainHandler.sendMessage(m);
+    }
+
+    public static boolean hasTask(Runnable runnable) {
+        return mainHandler.hasMessages(runnable.hashCode());
     }
 }
