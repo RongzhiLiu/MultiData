@@ -16,4 +16,4 @@ rootProject.name = "MultiData"
 include ':multidata'
 include ':annotation'
 include ':processor'
-include ':simple'
+include ':sample'
