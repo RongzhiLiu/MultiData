@@ -152,7 +152,6 @@ public class AnnotationProcessor extends AbstractProcessor {
                             //添加保存到磁盘的方法
                             if (dataElement != null && dataElement.getKind() == ElementKind.CLASS) {
                                 //获取该类下所有方法
-                                System.out.println("-------start");
                                 List<? extends Element> mem = elementUtils.getAllMembers(dataElement);
                                 HashMap<String, ExecutableElement> setMethods = new HashMap<>();
                                 HashMap<String, ExecutableElement> getMethods = new HashMap<>();
@@ -185,7 +184,6 @@ public class AnnotationProcessor extends AbstractProcessor {
                                                 ");", MultiData.class);
                                     }
                                 }
-                                System.out.println("-------end");
                             } else if (!isBasic(type)) {
                                 String value = null;
                                 if (isDataClass) {
