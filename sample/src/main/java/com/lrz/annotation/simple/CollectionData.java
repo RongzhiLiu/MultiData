@@ -13,7 +13,7 @@ import java.util.Map;
  * @CreateTime: 2022/9/15
  * @Description: 集合参数示例
  */
-@Table(name = "CollectionData")
+@Table(name = "CollectionData",lazy = true)
 public interface CollectionData {
     @Get(name = "array_list")
     ArrayList<String> getArray();

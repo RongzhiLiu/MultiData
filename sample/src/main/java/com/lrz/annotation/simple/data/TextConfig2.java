@@ -19,4 +19,20 @@ public class TextConfig2 extends TextConfig{
     public void setType(int type) {
         this.type = type;
     }
+
+    @Table(name = "text_config4")
+    public static class TextConfig4{
+        @SerializedName("type")
+        int type = 0;
+
+        @Get(name = "type",defaultInt = 12)
+        public int getType() {
+            return type;
+        }
+
+        @Set(name = "type")
+        public void setType(int type) {
+            this.type = type;
+        }
+    }
 }

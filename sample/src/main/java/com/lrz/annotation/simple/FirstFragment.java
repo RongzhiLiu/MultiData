@@ -1,7 +1,6 @@
 package com.lrz.annotation.simple;
 
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.lrz.annotation.simple.data.TextConfig;
 import com.lrz.annotation.simple.databinding.FragmentFirstBinding;
 import com.lrz.multi.MultiData;
-
-import java.util.HashMap;
 
 public class FirstFragment extends Fragment {
 
@@ -49,6 +46,10 @@ public class FirstFragment extends Fragment {
             public void onClick(View view) {
                 config = new TextConfig();
                 config.setBookId("3221");
+                DataSimple simple = MultiData.DATA.get(DataSimple.class);
+                simple.getStr();
+                simple.setStr("my name");
+                MultiData.DATA.clear(Data2Simple.class);
                 MultiData.DATA.get(Data2Simple.class).setConfig1(config);
                 System.out.println("--------1read:" + MultiData.DATA.get(Data2Simple.class).getConfig1());
             }
@@ -57,15 +58,13 @@ public class FirstFragment extends Fragment {
         binding.b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                config = new TextConfig();
-                config.setBookId("测试");
-                MultiData.DATA.save(TextConfig.class,config);
+
             }
         });
         binding.b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("--------read:" + MultiData.DATA.get(Data2Simple.class).getConfig1());
+                System.out.println("--------read:" + MultiData.DATA.get(Data2Simple.class).toString());
             }
         });
     }
