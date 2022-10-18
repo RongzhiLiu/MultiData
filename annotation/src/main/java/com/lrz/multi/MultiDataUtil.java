@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lrz.multi.Interface.IMultiCollection;
 
 import java.util.List;
 import java.util.Map;
@@ -134,6 +135,10 @@ public class MultiDataUtil {
         String json = getSp(context, table).getString(key, "");
         Map<K, V> map = GSON.fromJson(json, new TypeToken<Map<K, V>>() {
         }.getType());
+        if (value instanceof IMultiCollection) {
+            ((IMultiCollection) value).putAllData(map);
+            map = value;
+        }
         return map == null ? value : map;
     }
 
@@ -143,6 +148,10 @@ public class MultiDataUtil {
         String json = getSp(context, table).getString(key, "");
         List<K> map = GSON.fromJson(json, new TypeToken<List<K>>() {
         }.getType());
+        if (value instanceof IMultiCollection) {
+            ((IMultiCollection) value).putAllData(map);
+            map = value;
+        }
         return map == null ? value : map;
     }
 
@@ -152,6 +161,10 @@ public class MultiDataUtil {
         String json = getSp(context, table).getString(key, "");
         Set<K> map = GSON.fromJson(json, new TypeToken<Set<K>>() {
         }.getType());
+        if (value instanceof IMultiCollection) {
+            ((IMultiCollection) value).putAllData(map);
+            map = value;
+        }
         return map == null ? value : map;
     }
 

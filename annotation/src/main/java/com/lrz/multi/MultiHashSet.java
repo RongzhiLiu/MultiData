@@ -6,14 +6,13 @@ import com.lrz.multi.Interface.IMultiCollection;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.TreeSet;
 
 /**
  * @Author: liurongzhi
  * @CreateTime: 2022/9/15
  * @Description:
  */
-public class MultiHashSet<E> extends HashSet<E> implements IMultiCollection {
+public class MultiHashSet<E> extends HashSet<E> implements IMultiCollection<Collection<E>> {
     private final String table;
     private final String key;
 
@@ -69,6 +68,13 @@ public class MultiHashSet<E> extends HashSet<E> implements IMultiCollection {
         if (TextUtils.isEmpty(table) || TextUtils.isEmpty(key)) return;
         if (!MultiDataUtil.hasTask(runnable)) {
             MultiDataUtil.postTask(runnable);
+        }
+    }
+
+    @Override
+    public void putAllData(Collection<E> es) {
+        if (es != null) {
+            super.addAll(es);
         }
     }
 

@@ -12,7 +12,7 @@ import java.util.Collection;
  * @CreateTime: 2022/9/15
  * @Description:
  */
-public class MultiArrayList<T> extends ArrayList<T> implements IMultiCollection {
+public class MultiArrayList<T> extends ArrayList<T> implements IMultiCollection<Collection<T>> {
     private final String table;
     private final String key;
 
@@ -94,6 +94,13 @@ public class MultiArrayList<T> extends ArrayList<T> implements IMultiCollection 
         if (TextUtils.isEmpty(table) || TextUtils.isEmpty(key)) return;
         if (!MultiDataUtil.hasTask(runnable)) {
             MultiDataUtil.postTask(runnable);
+        }
+    }
+
+    @Override
+    public void putAllData(Collection<T> es) {
+        if (es != null) {
+            super.addAll(es);
         }
     }
 

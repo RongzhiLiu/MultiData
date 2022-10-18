@@ -5,6 +5,7 @@ package com.lrz.multi.Interface;
  * @CreateTime: 2022/9/15
  * @Description:
  */
-public interface IMultiCollection {
+public interface IMultiCollection<D> {
     void onChanged(String table,String key);
+    void putAllData(D d);
 }

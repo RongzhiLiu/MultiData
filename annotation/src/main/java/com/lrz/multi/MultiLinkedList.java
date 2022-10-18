@@ -13,7 +13,7 @@ import java.util.LinkedList;
  * @CreateTime: 2022/9/15
  * @Description:
  */
-public class MultiLinkedList<T> extends LinkedList<T> implements IMultiCollection {
+public class MultiLinkedList<T> extends LinkedList<T> implements IMultiCollection<Collection<T>> {
     private String table;
     private String key;
 
@@ -112,6 +112,13 @@ public class MultiLinkedList<T> extends LinkedList<T> implements IMultiCollectio
         if (TextUtils.isEmpty(table) || TextUtils.isEmpty(key)) return;
         if (!MultiDataUtil.hasTask(runnable)) {
             MultiDataUtil.postTask(runnable);
+        }
+    }
+
+    @Override
+    public void putAllData(Collection<T> es) {
+        if (es != null) {
+            super.addAll(es);
         }
     }
 

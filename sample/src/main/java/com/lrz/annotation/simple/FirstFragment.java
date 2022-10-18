@@ -58,13 +58,13 @@ public class FirstFragment extends Fragment {
         binding.b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                MultiData.DATA.get(CollectionData.class).getMap().put("123","1");
             }
         });
         binding.b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("--------read:" + MultiData.DATA.get(Data2Simple.class).toString());
+                System.out.println("--------read:" + MultiData.DATA.get(CollectionData.class));
             }
         });
     }

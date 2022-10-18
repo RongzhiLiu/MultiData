@@ -7,7 +7,7 @@ import com.lrz.multi.Interface.IMultiCollection;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class MultiTreeMap<V> extends TreeMap<String, V> implements IMultiCollection {
+public class MultiTreeMap<V> extends TreeMap<String, V> implements IMultiCollection<Map<String, V>> {
     private final String table;
     private final String key;
 
@@ -60,6 +60,13 @@ public class MultiTreeMap<V> extends TreeMap<String, V> implements IMultiCollect
         if (TextUtils.isEmpty(table) || TextUtils.isEmpty(key)) return;
         if (!MultiDataUtil.hasTask(runnable)) {
             MultiDataUtil.postTask(runnable);
+        }
+    }
+
+    @Override
+    public void putAllData(Map<String, V> map) {
+        if (map != null) {
+            super.putAll(map);
         }
     }
 
