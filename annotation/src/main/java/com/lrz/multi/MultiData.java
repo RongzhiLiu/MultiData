@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * 不可混淆
  */
 public class MultiData {
-    public static final String DEFAULT_TABLE = "DEFAULT_TABLE";
     private final ConcurrentHashMap<Class, Object> data = new ConcurrentHashMap<>();
     public static final MultiData DATA = new MultiData();
     private volatile ConcurrentHashMap<Class, Class> classHashMap;
@@ -23,7 +22,7 @@ public class MultiData {
         T t = (T) data.get(tClass);
         if (t == null) {
             try {
-                Table table = ((Table) tClass.getAnnotation(Table.class));
+                Table table = tClass.getAnnotation(Table.class);
                 if (table != null) {
                     Class imp = getClassHash().get(tClass);
                     if (imp == null) {
@@ -94,15 +93,15 @@ public class MultiData {
         if (classHashMap == null) {
             synchronized (this) {
                 if (classHashMap == null) {
+                    classHashMap = new ConcurrentHashMap<>();
+                }
+                try {
                     Class c = null;
-                    try {
-                        c = Class.forName("com.lrz.multi.Interface.MultiConstants");
-                        classHashMap = new ConcurrentHashMap<>();
-                        classHashMap.putAll((Map<? extends Class, ? extends Class>) c.getDeclaredField("CLASSES").get(c));
-                    } catch (Exception e) {
-                        Log.e("MultiData", "没有发现注册的接口类，初始化失败", e);
-                        e.printStackTrace();
-                    }
+                    c = Class.forName("com.lrz.multi.Interface.MultiConstants");
+                    classHashMap.putAll((Map<? extends Class, ? extends Class>) c.getDeclaredField("CLASSES").get(c));
+                } catch (Exception e) {
+                    Log.e("MultiData", "没有发现注册的接口类，初始化失败", e);
+                    e.printStackTrace();
                 }
             }
         }
@@ -126,7 +125,7 @@ public class MultiData {
             Log.e("MultiData", "你删除的不是一张表，删除失败！");
             return;
         }
-        if (!DEFAULT_TABLE.equals(table.name())) {
+        if (!"DEFAULT_TABLE".equals(table.name())) {
             MultiDataManager.MANAGER.getInnerDataListener().onClear(table.name());
         } else {
             try {

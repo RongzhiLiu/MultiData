@@ -443,6 +443,7 @@ public class AnnotationProcessor extends AbstractProcessor {
         }
         CodeBlock.Builder builder = CodeBlock.builder();
         for (Map.Entry<TypeElement, String> entry : impClass.entrySet()) {
+            System.out.println("===生成类映射====》" + entry.getValue());
             builder.addStatement("CLASSES.put(" + entry.getKey().getQualifiedName() + ".class" + "," + entry.getValue() + ".class)");
         }
 
@@ -452,6 +453,7 @@ public class AnnotationProcessor extends AbstractProcessor {
                 .addField(fc)
                 .addStaticBlock(builder.build())
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+
         JavaFile constants = JavaFile.builder("com.lrz.multi.Interface", typeSpec.build())
                 .build();
         try {

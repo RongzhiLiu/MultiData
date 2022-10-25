@@ -1,7 +1,6 @@
 package com.lrz.multi.annotation;
 
 
-import com.lrz.multi.MultiData;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -16,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface Table {
-    String name() default MultiData.DEFAULT_TABLE;
+    String name() default "DEFAULT_TABLE";
 
     /**
      * 是否延迟从磁盘中初始化，等到需要使用时再加载
