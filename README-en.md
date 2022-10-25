@@ -6,10 +6,11 @@ MultiData is a cache management middleware that decouples business logic and cac
 
 ````java
 //depends
-api 'com.github.RongzhiLiu.MultiData:annotation:v1.0.4'
-annotationProcessor 'com.github.RongzhiLiu.MultiData:processor:v1.0.4'
+api 'com.github.RongzhiLiu.MultiData:annotation:v1.0.5'
+annotationProcessor 'com.github.RongzhiLiu.MultiData:processor:v1.0.5'
   //obfuscate
 -keep interface com.lrz.multi.Interface.** { *; }
+-keep class com.lrz.multi.Interface.** { *; }
 -keep class * extends com.lrz.multi.Interface.IMultiData
 ````
 
