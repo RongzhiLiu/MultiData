@@ -135,7 +135,7 @@ public class MultiDataUtil {
         String json = getSp(context, table).getString(key, "");
         Map<K, V> map = GSON.fromJson(json, new TypeToken<Map<K, V>>() {
         }.getType());
-        if (value instanceof IMultiCollection) {
+        if (value instanceof IMultiCollection && map != null) {
             ((IMultiCollection) value).putAllData(map);
             map = value;
         }
@@ -148,7 +148,7 @@ public class MultiDataUtil {
         String json = getSp(context, table).getString(key, "");
         List<K> map = GSON.fromJson(json, new TypeToken<List<K>>() {
         }.getType());
-        if (value instanceof IMultiCollection) {
+        if (value instanceof IMultiCollection && map != null) {
             ((IMultiCollection) value).putAllData(map);
             map = value;
         }
@@ -161,7 +161,7 @@ public class MultiDataUtil {
         String json = getSp(context, table).getString(key, "");
         Set<K> map = GSON.fromJson(json, new TypeToken<Set<K>>() {
         }.getType());
-        if (value instanceof IMultiCollection) {
+        if (value instanceof IMultiCollection && map != null) {
             ((IMultiCollection) value).putAllData(map);
             map = value;
         }
@@ -225,7 +225,7 @@ public class MultiDataUtil {
      * @param klass
      * @return
      */
-    public static Class getTableImp(Class klass) {
+    public static <C> Class<C> getTableImp(Class<C> klass) {
         final String fullPackage = klass.getPackage().getName();
         String name = klass.getCanonicalName();
         final String postPackageName = fullPackage.isEmpty()
