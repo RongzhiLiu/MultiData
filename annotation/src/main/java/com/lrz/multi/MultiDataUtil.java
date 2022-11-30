@@ -12,6 +12,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lrz.multi.Interface.IMultiCollection;
 
+import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -262,5 +264,62 @@ public class MultiDataUtil {
 
     public static boolean hasTask(Runnable runnable) {
         return mainHandler.hasMessages(runnable.hashCode());
+    }
+
+    /**
+     * 获取object 占用的内存大小
+     *
+     * @param object
+     * @return
+     */
+    public static int getObjectSize(Object object) {
+        int size = 8 + 4;
+        Class c = object.getClass();
+        while (c != Object.class) {
+            Field[] fields = c.getDeclaredFields();
+            for (Field field : fields) {
+                size += getFieldSize(field, object);
+            }
+            c = c.getSuperclass();
+        }
+        return size;
+    }
+
+    private static int getFieldSize(Field field, Object obj) {
+        if (field == null) return 0;
+        field.setAccessible(true);
+        Class<?> aClass = field.getType();
+        Object fieldValue = null;
+        try {
+            fieldValue = field.get(obj);
+            if (fieldValue == null) return 0;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        if (aClass == Integer.class || aClass == int.class
+                || aClass == float.class || aClass == Float.class) {
+            return 4;
+        } else if (aClass == Long.class || aClass == long.class
+                || aClass == double.class || aClass == Double.class) {
+            return 8;
+        } else if (aClass == boolean.class || aClass == Boolean.class
+                || aClass == byte.class || aClass == Byte.class) {
+            return 1;
+        } else if (aClass == short.class || aClass == Short.class
+                || aClass == char.class || aClass == Character.class) {
+            return 2;
+        } else if (aClass == String.class) {
+            String value = (String) fieldValue;
+            if (value != null) {
+                return 40 + 2 * value.length();
+            }
+            return 40;
+        } else if (aClass.isAssignableFrom(Map.class) || aClass.isAssignableFrom(List.class) || aClass.isAssignableFrom(Set.class)) {
+            //如果是集合，则以缓存中的字段长度来计算
+            IMultiCollection collection = (IMultiCollection) fieldValue;
+            String memoryStr = MultiDataUtil.GSON.toJson(collection);
+            return 40 + 2 * memoryStr.length();
+        }
+        return 0;
     }
 }

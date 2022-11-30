@@ -8,8 +8,8 @@ import java.util.ArrayList;
  * Description:
  */
 public class LargeData {
-    String name;
-    String desc;
-    String url;
+    String name = "133";
+    int i1=2;
+    Integer i2 =2;
     ArrayList<String> data;
 }

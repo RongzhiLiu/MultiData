@@ -84,4 +84,14 @@ public class MultiHashSet<E> extends HashSet<E> implements IMultiCollection<Coll
             MultiDataManager.MANAGER.getInnerDataListener().onSave(table, key, MultiHashSet.this);
         }
     };
+
+    @Override
+    public String getTable() {
+        return table;
+    }
+
+    @Override
+    public String getKey() {
+        return key;
+    }
 }

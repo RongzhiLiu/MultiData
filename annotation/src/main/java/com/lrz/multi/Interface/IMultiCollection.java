@@ -8,4 +8,6 @@ package com.lrz.multi.Interface;
 public interface IMultiCollection<D> {
     void onChanged(String table,String key);
     void putAllData(D d);
+    String getTable();
+    String getKey();
 }

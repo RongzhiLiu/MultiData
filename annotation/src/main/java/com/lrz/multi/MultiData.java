@@ -1,6 +1,7 @@
 package com.lrz.multi;
 
 import android.util.Log;
+import android.util.LruCache;
 
 import com.lrz.multi.Interface.IMultiClassData;
 import com.lrz.multi.Interface.IMultiData;
@@ -14,9 +15,16 @@ import java.util.concurrent.ConcurrentHashMap;
  * 不可混淆
  */
 public class MultiData {
-    private final ConcurrentHashMap<Class, Object> data = new ConcurrentHashMap<>();
     public static final MultiData DATA = new MultiData();
-    private volatile ConcurrentHashMap<Class, Class> classHashMap;
+    private volatile ConcurrentHashMap<Class<?>, Class<?>> classHashMap;
+
+    private final LruCache<Class<?>, Object> data = new LruCache<Class<?>, Object>(MultiDataManager.getMemorySize()) {
+        @Override
+        protected int sizeOf(Class<?> key, Object value) {
+            return MultiDataUtil.getObjectSize(value);
+        }
+    };
+
 
     public <T> T get(Class<T> tClass) {
         T t = (T) data.get(tClass);
@@ -32,7 +40,6 @@ public class MultiData {
                     Constructor constructor = imp.getDeclaredConstructor();
                     constructor.setAccessible(true);
                     IMultiData data = (IMultiData) constructor.newInstance();
-
                     data.loadMulti(true);
                     t = (T) data;
                     this.data.put(tClass, data);
@@ -71,15 +78,17 @@ public class MultiData {
 
     void initPre() {
         try {
-            Map<Class, Class> map = getClassHash();
-            for (Map.Entry<Class, Class> entry : map.entrySet()) {
+            Map<Class<?>, Class<?>> map = getClassHash();
+            for (Map.Entry<Class<?>, Class<?>> entry : map.entrySet()) {
                 Class imp = entry.getValue();
                 Table table = ((Table) entry.getKey().getAnnotation(Table.class));
                 if (table == null || table.lazy()) continue;
                 if (imp == null) {
                     imp = MultiDataUtil.getTableImp(entry.getKey());
                 }
-                IMultiData data = (IMultiData) imp.newInstance();
+                Constructor constructor = imp.getDeclaredConstructor();
+                constructor.setAccessible(true);
+                IMultiData data = (IMultiData) constructor.newInstance();
                 data.loadMulti(false);
                 this.data.put(entry.getKey(), data);
                 Log.d("MultiData", "预初始化成功：" + data.tableName() + "  " + MultiDataUtil.GSON.toJson(data));
@@ -89,7 +98,7 @@ public class MultiData {
         }
     }
 
-    public Map<Class, Class> getClassHash() {
+    public Map<Class<?>, Class<?>> getClassHash() {
         if (classHashMap == null) {
             synchronized (this) {
                 if (classHashMap == null) {
@@ -98,7 +107,7 @@ public class MultiData {
                 try {
                     Class c = null;
                     c = Class.forName("com.lrz.multi.Interface.MultiConstants");
-                    classHashMap.putAll((Map<? extends Class, ? extends Class>) c.getDeclaredField("CLASSES").get(c));
+                    classHashMap.putAll((Map<? extends Class<?>, ? extends Class<?>>) c.getDeclaredField("CLASSES").get(c));
                 } catch (Exception e) {
                     Log.e("MultiData", "没有发现注册的接口类，初始化失败", e);
                     e.printStackTrace();

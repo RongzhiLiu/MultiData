@@ -76,4 +76,14 @@ public class MultiTreeMap<V> extends TreeMap<String, V> implements IMultiCollect
             MultiDataManager.MANAGER.getInnerDataListener().onSave(table, key, MultiTreeMap.this);
         }
     };
+
+    @Override
+    public String getTable() {
+        return table;
+    }
+
+    @Override
+    public String getKey() {
+        return key;
+    }
 }

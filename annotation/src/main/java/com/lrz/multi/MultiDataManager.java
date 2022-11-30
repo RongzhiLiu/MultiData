@@ -1,7 +1,6 @@
 package com.lrz.multi;
 
 
-
 import android.content.Context;
 
 import com.lrz.multi.Interface.IMultiData;
@@ -48,10 +47,10 @@ public class MultiDataManager {
             } else if (value instanceof IMultiData) {
                 //不是sp支持的基本类型，则走读表
                 //根据imp类找到 原始类
-                Map<Class, Class> map = MultiData.DATA.getClassHash();
+                Map<Class<?>, Class<?>> map = MultiData.DATA.getClassHash();
                 if (map == null) return value;
                 Class realClass = null;
-                for (Map.Entry<Class, Class> entry : map.entrySet()) {
+                for (Map.Entry<Class<?>, Class<?>> entry : map.entrySet()) {
                     if (entry.getValue() == value.getClass()) {
                         realClass = entry.getKey();
                         break;
@@ -93,6 +92,20 @@ public class MultiDataManager {
         if (app == null) return;
         context = app;
         MultiData.DATA.initPre();
+    }
+
+    private static int memorySize = 1024 * 1024;
+
+    /**
+     * 设置最大内存
+     * @param size
+     */
+    private static void setMemorySize(int size) {
+        memorySize = size;
+    }
+
+    public static int getMemorySize() {
+        return memorySize;
     }
 
     public Context getContext() {

@@ -1,6 +1,7 @@
 package com.lrz.annotation.simple;
 
 import android.os.Bundle;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.lrz.annotation.simple.data.LargeData;
 import com.lrz.annotation.simple.data.TextConfig;
+import com.lrz.annotation.simple.data.TextConfig2;
 import com.lrz.annotation.simple.databinding.FragmentFirstBinding;
 import com.lrz.multi.MultiData;
+import com.lrz.multi.MultiDataUtil;
+
+import java.lang.reflect.Field;
 
 public class FirstFragment extends Fragment {
 
@@ -58,7 +64,7 @@ public class FirstFragment extends Fragment {
         binding.b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MultiData.DATA.get(CollectionData.class).getMap().put("123","1");
+                MultiData.DATA.get(CollectionData.class).getMap().put("123", "1");
             }
         });
         binding.b3.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +73,16 @@ public class FirstFragment extends Fragment {
                 System.out.println("--------read:" + MultiData.DATA.get(CollectionData.class));
             }
         });
+
+        MultiData.DATA.get(TextConfig.class);
+        MultiData.DATA.get(TextConfig2.class);
+        MultiData.DATA.get(DataSimple.class);
+        MultiData.DATA.get(Data2Simple.class);
+        MultiData.DATA.get(CollectionData.class);
+        MultiData.DATA.get(TextConfig.class);
+        MultiData.DATA.get(TextConfig.class);
+        MultiData.DATA.get(TextConfig.class);
+        MultiData.DATA.get(CollectionData.class);
     }
 
     @Override

@@ -128,4 +128,14 @@ public class MultiLinkedList<T> extends LinkedList<T> implements IMultiCollectio
             MultiDataManager.MANAGER.getInnerDataListener().onSave(table, key, MultiLinkedList.this);
         }
     };
+
+    @Override
+    public String getTable() {
+        return table;
+    }
+
+    @Override
+    public String getKey() {
+        return key;
+    }
 }

@@ -84,4 +84,14 @@ public class MultiTreeSet<E> extends TreeSet<E> implements IMultiCollection<Coll
             MultiDataManager.MANAGER.getInnerDataListener().onSave(table, key, MultiTreeSet.this);
         }
     };
+
+    @Override
+    public String getTable() {
+        return table;
+    }
+
+    @Override
+    public String getKey() {
+        return key;
+    }
 }
