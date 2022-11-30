@@ -145,6 +145,8 @@ MultiDataManager.MANAGER.setOnMultiDataListener(new OnMultiDataListener() {
 
 //调用 initPre初始化（此方法非强制调用，可根据实际情况确定是否需要使用）
 MultiDataManager.initPre(context);
+//可设置最大内存，默认1mb,内存中只保留最热的数据
+MultiDataManager.setMemorySize(1024*1024);
 ```
 
 ##### 		b.每一个被定义的@Table 的interface/Class 在内存中都是一个单例对象，可通过以下方式获取
