@@ -6,8 +6,8 @@ MultiData 是一个缓存管理中间件，将业务逻辑和缓存解耦，方�
 
 ```java
 	//依赖
-api 'com.github.RongzhiLiu.MultiData:annotation:v1.0.5'
-annotationProcessor 'com.github.RongzhiLiu.MultiData:processor:v1.0.5'
+api 'com.github.RongzhiLiu.MultiData:annotation:v1.0.6'
+annotationProcessor 'com.github.RongzhiLiu.MultiData:processor:v1.0.6'
   //混淆
 -keep interface com.lrz.multi.Interface.** { *; }
 -keep class com.lrz.multi.Interface.** { *; }        
