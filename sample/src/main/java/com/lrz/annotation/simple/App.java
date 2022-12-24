@@ -28,6 +28,7 @@ public class App extends Application {
                 return MultiDataUtil.get(table, key, value);
             }
         });
+        MultiDataManager.setMemorySize(1024 * 1024);
         MultiDataManager.initPre(this);
     }
 }

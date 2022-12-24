@@ -74,15 +74,12 @@ public class FirstFragment extends Fragment {
             }
         });
 
-        MultiData.DATA.get(TextConfig.class);
-        MultiData.DATA.get(TextConfig2.class);
-        MultiData.DATA.get(DataSimple.class);
-        MultiData.DATA.get(Data2Simple.class);
-        MultiData.DATA.get(CollectionData.class);
-        MultiData.DATA.get(TextConfig.class);
-        MultiData.DATA.get(TextConfig.class);
-        MultiData.DATA.get(TextConfig.class);
-        MultiData.DATA.get(CollectionData.class);
+        UserInfo info = MultiData.DATA.get(UserInfo.class);
+        MultiData.DATA.save(UserInfo.class,info);
+        MultiData.DATA.get(CollectionData.class).getHashMap().get("");
+
+        MultiData.DATA.get(CollectionData.class).getHashMap().put("","");
+
     }
 
     @Override

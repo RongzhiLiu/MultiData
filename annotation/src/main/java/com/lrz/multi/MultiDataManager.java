@@ -68,7 +68,11 @@ public class MultiDataManager {
 
         @Override
         public void onClear(String table) {
-            MultiDataUtil.clear(table);
+            if (customerListener != null) {
+                customerListener.onClear(table);
+            } else {
+                MultiDataUtil.clear(table);
+            }
         }
     };
 
@@ -98,9 +102,10 @@ public class MultiDataManager {
 
     /**
      * 设置最大内存
+     *
      * @param size
      */
-    private static void setMemorySize(int size) {
+    public static void setMemorySize(int size) {
         memorySize = size;
     }
 

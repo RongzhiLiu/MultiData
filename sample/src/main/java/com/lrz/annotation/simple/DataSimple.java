@@ -8,7 +8,7 @@ import com.lrz.multi.annotation.Table;
 /**
  * 基本类型，二级表示例
  */
-@Table(name = "data_simple")
+@Table(name = "data_simple",lazy = true)
 public interface DataSimple {
     @Get(name = "name")
     String getStr();
