@@ -3,7 +3,10 @@
 MultiData is a cache management middleware that decouples business logic and cache, and manages cache in the form of objects/interfaces conveniently and quickly. Each interface/class you define with @Table is a single entity in memory. For example, it is a single file on disk
 
 #### 1. Add dependencies and obfuscate configuration
-
+```java
+// add maven in project file build.gradle
+maven { url 'https://jitpack.io' }
+```        
 ````java
 //depends
 api 'com.github.RongzhiLiu.MultiData:annotation:v1.0.7'

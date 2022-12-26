@@ -3,7 +3,10 @@
 MultiData 是一个缓存管理中间件，将业务逻辑和缓存解耦，方便且快速的以对象/接口的形式去管理缓存,你定义的每一个带有@Table的接口/类 在内存中都是一个单例，在磁盘中都是一个单独的文件
 
 #### 1.添加依赖 和混淆配置
-
+```java
+// 在project下的build.gradle中添加如下maven地址
+maven { url 'https://jitpack.io' }
+```        
 ```java
 	//依赖
 api 'com.github.RongzhiLiu.MultiData:annotation:v1.0.7'
