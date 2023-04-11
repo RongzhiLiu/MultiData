@@ -51,6 +51,7 @@ public class FirstFragment extends Fragment {
                 MultiData.DATA.get(DataSimple.class).getMap().put("data", info);
                 MultiData.DATA.get(DataSimple.class).getList().add(info);
                 MultiData.DATA.get(DataSimple.class).getSet().add(info);
+                MultiData.DATA.get(DataSimple.class).getMapI().put("1", 1);
             }
         });
 
@@ -68,6 +69,7 @@ public class FirstFragment extends Fragment {
                 System.out.println("------读取" + MultiData.DATA.get(DataSimple.class).getMap().get("data").name);
                 System.out.println("------读取2" + MultiData.DATA.get(DataSimple.class).getList().get(0).name);
                 System.out.println("------读取3" + MultiData.DATA.get(DataSimple.class).getSet().iterator().next().name);
+                System.out.println("------读取3" + MultiData.DATA.get(DataSimple.class).getMapI().get("1"));
             }
         });
 

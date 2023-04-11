@@ -20,6 +20,12 @@ public interface DataSimple {
     @Set(name = "map")
     void setMap(Map<String, UserInfo> map);
 
+    @Get(name = "mapint")
+    Map<String, Integer> getMapI();
+
+    @Set(name = "mapint")
+    void setMapI(Map<String, Integer> map);
+
     @Get(name = "hash")
     HashMap<String, UserInfo> getHashMap();
 
