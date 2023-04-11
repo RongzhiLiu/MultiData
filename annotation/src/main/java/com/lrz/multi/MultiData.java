@@ -18,12 +18,13 @@ public class MultiData {
     public static final MultiData DATA = new MultiData();
     private volatile ConcurrentHashMap<Class<?>, Class<?>> classHashMap;
 
-    private final LruCache<Class<?>, Object> data = new LruCache<Class<?>, Object>(MultiDataManager.getMemorySize()) {
-        @Override
-        protected int sizeOf(Class<?> key, Object value) {
-            return MultiDataUtil.getObjectSize(value);
-        }
-    };
+    //    private final LruCache<Class<?>, Object> data = new LruCache<Class<?>, Object>(MultiDataManager.getMemorySize()) {
+//        @Override
+//        protected int sizeOf(Class<?> key, Object value) {
+//            return MultiDataUtil.getObjectSize(value);
+//        }
+//    };
+    private final ConcurrentHashMap<Class<?>, Object> data = new ConcurrentHashMap<>();
 
 
     public <T> T get(Class<T> tClass) {

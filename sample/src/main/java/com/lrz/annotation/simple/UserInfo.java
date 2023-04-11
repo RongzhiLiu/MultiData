@@ -13,18 +13,13 @@ import java.util.TreeMap;
  * CreateTime:  2022/12/1
  * Description:
  */
-@Table(name = "user_info")
-public class UserInfo {
-    protected String name;
+public class UserInfo implements Comparable<UserInfo>{
+    public String name;
+    public int i;
+    public boolean b;
 
-    @Get(name = "name")
-    public String getName() {
-        return name;
+    @Override
+    public int compareTo(UserInfo o) {
+        return 0;
     }
-    @Set(name = "name")
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
 }

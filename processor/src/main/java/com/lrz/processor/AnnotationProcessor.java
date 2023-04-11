@@ -241,6 +241,7 @@ public class AnnotationProcessor extends AbstractProcessor {
                                         }
                                     }
                                 }
+                                builder.addCode("if (" + variableElement.getSimpleName().toString() + " == " + "this." + set.name() + "){ return;}");
                                 builder.addCode("if (" +
                                         variableElement.getSimpleName().toString() + " == null" +
                                         "){\n" +
@@ -325,7 +326,13 @@ public class AnnotationProcessor extends AbstractProcessor {
                     saveMulti.addCode("$T.MANAGER.getInnerDataListener().onSave($S,$S," + fieldSpecs.getValue().name + ");"
                             , MultiDataManager.class,
                             table.name(), fieldSpecs.getKey());
-                    String type = fieldSpecs.getValue().type.toString().split("<")[0];
+                    String[] typeAndPar = fieldSpecs.getValue().type.toString().split("<");
+                    String type = typeAndPar[0];
+                    //范型的描述
+                    String par = "";
+                    if (typeAndPar.length > 1) {
+                        par = "<" + fieldSpecs.getValue().type.toString().split("<")[1];
+                    }
                     boolean isDataClass = false;
                     for (Element el : elements) {
                         if (el instanceof TypeElement) {
@@ -346,6 +353,7 @@ public class AnnotationProcessor extends AbstractProcessor {
                                 , MultiDataManager.class,
                                 table.name(), fieldSpecs.getKey());
                     } else {
+                        String addOrPut = ".addAll(";
                         try {
                             Class typeClass = Class.forName(type);
                             if (typeClass == String.class) {
@@ -356,6 +364,7 @@ public class AnnotationProcessor extends AbstractProcessor {
                                 Class sonClass = typeClass;
                                 if (typeClass == HashMap.class) {
                                     sonClass = MultiHashMap.class;
+                                    addOrPut = ".putAll(";
                                 } else if (typeClass == ArrayList.class) {
                                     sonClass = MultiArrayList.class;
                                 } else if (typeClass == LinkedList.class) {
@@ -366,28 +375,38 @@ public class AnnotationProcessor extends AbstractProcessor {
                                     sonClass = MultiTreeSet.class;
                                 } else if (typeClass == TreeMap.class) {
                                     sonClass = MultiTreeMap.class;
+                                    addOrPut = ".putAll(";
                                 }
                                 if (sonClass == typeClass) {
                                     loadMulti.addCode(fieldSpecs.getValue().name + " = $T.MANAGER.getInnerDataListener().onLoad($S,$S," + "new $T()" + ");"
                                             , MultiDataManager.class,
                                             table.name(), fieldSpecs.getKey(), sonClass);
                                 } else {
-                                    loadMulti.addCode(fieldSpecs.getValue().name + " = $T.MANAGER.getInnerDataListener().onLoad($S,$S," + "new $T($S,$S)" + ");"
+                                    if (sonClass == MultiHashMap.class || sonClass == MultiTreeMap.class) {
+                                        par = par.replace("java.lang.String,", "");
+                                    }
+                                    loadMulti.addCode(fieldSpecs.getValue().name + " = new $T($S,$S);", sonClass, table.name(), fieldSpecs.getKey());
+
+                                    loadMulti.addCode(fieldSpecs.getValue().name + addOrPut + "$T.MANAGER.getInnerDataListener().onLoad($S,$S," + "new $T" + par + "($S,$S){}" + "));"
                                             , MultiDataManager.class,
                                             table.name(), fieldSpecs.getKey(), sonClass, table.name(), fieldSpecs.getKey());
                                 }
 
 
                             } else if (List.class.isAssignableFrom(typeClass)) {
-                                loadMulti.addCode(fieldSpecs.getValue().name + " = $T.MANAGER.getInnerDataListener().onLoad($S,$S,new $T<>($S,$S));"
+                                loadMulti.addCode(fieldSpecs.getValue().name + " = new $T($S,$S);", MultiArrayList.class, table.name(), fieldSpecs.getKey());
+                                loadMulti.addCode(fieldSpecs.getValue().name + addOrPut + "$T.MANAGER.getInnerDataListener().onLoad($S,$S,new $T" + par + "($S,$S){}));"
                                         , MultiDataManager.class,
                                         table.name(), fieldSpecs.getKey(), MultiArrayList.class, table.name(), fieldSpecs.getKey());
                             } else if (Map.class.isAssignableFrom(typeClass)) {
-                                loadMulti.addCode(fieldSpecs.getValue().name + " = $T.MANAGER.getInnerDataListener().onLoad($S,$S,new $T<>($S,$S));"
+                                addOrPut = ".putAll(";
+                                loadMulti.addCode(fieldSpecs.getValue().name + " = new $T($S,$S);", MultiHashMap.class, table.name(), fieldSpecs.getKey());
+                                loadMulti.addCode(fieldSpecs.getValue().name + addOrPut + "$T.MANAGER.getInnerDataListener().onLoad($S,$S,new $T" + par.replace("java.lang.String,", "") + "($S,$S){}));"
                                         , MultiDataManager.class,
                                         table.name(), fieldSpecs.getKey(), MultiHashMap.class, table.name(), fieldSpecs.getKey());
                             } else if (Set.class.isAssignableFrom(typeClass)) {
-                                loadMulti.addCode(fieldSpecs.getValue().name + " = $T.MANAGER.getInnerDataListener().onLoad($S,$S,new $T<>($S,$S));"
+                                loadMulti.addCode(fieldSpecs.getValue().name + " = new $T($S,$S);", MultiTreeSet.class, table.name(), fieldSpecs.getKey());
+                                loadMulti.addCode(fieldSpecs.getValue().name + addOrPut + "$T.MANAGER.getInnerDataListener().onLoad($S,$S,new $T" + par + "($S,$S){}));"
                                         , MultiDataManager.class,
                                         table.name(), fieldSpecs.getKey(), MultiTreeSet.class, table.name(), fieldSpecs.getKey());
                             }

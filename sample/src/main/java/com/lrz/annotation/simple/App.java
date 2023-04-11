@@ -25,6 +25,7 @@ public class App extends Application {
 
             @Override
             public <T> T onLoad(String table, String key, T value) {
+                System.out.println("--------onLoad:" + value.getClass());
                 return MultiDataUtil.get(table, key, value);
             }
         });

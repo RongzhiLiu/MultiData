@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.lrz.multi.Interface.IMultiCollection;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +116,7 @@ public class MultiDataUtil {
         } else if (value instanceof Boolean) {
             v = (V) (Boolean) sharedPreferences.getBoolean(key, (Boolean) value);
         } else if (value instanceof Map) {
-            v = (V) getHash(table, key, (Map<Object, Object>) value);
+            v = (V) getHash(table, key, (Map<String, Object>) value);
         } else if (value instanceof List) {
             v = (V) getList(table, key, (List<Object>) value);
         } else if (value instanceof Set) {
@@ -131,16 +132,11 @@ public class MultiDataUtil {
         }
     }
 
-    public static <K, V> Map<K, V> getHash(String table, String key, Map<K, V> value) {
+    public static <V> Map<String, V> getHash(String table, String key, Map<String, V> value) {
         final Context context = MultiDataManager.MANAGER.getContext();
         if (context == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table)) return value;
         String json = getSp(context, table).getString(key, "");
-        Map<K, V> map = GSON.fromJson(json, new TypeToken<Map<K, V>>() {
-        }.getType());
-        if (value instanceof IMultiCollection && map != null) {
-            ((IMultiCollection) value).putAllData(map);
-            map = value;
-        }
+        Map<String,V> map = GSON.fromJson(json, value.getClass().getGenericSuperclass());
         return map == null ? value : map;
     }
 
@@ -148,12 +144,7 @@ public class MultiDataUtil {
         final Context context = MultiDataManager.MANAGER.getContext();
         if (context == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table)) return value;
         String json = getSp(context, table).getString(key, "");
-        List<K> map = GSON.fromJson(json, new TypeToken<List<K>>() {
-        }.getType());
-        if (value instanceof IMultiCollection && map != null) {
-            ((IMultiCollection) value).putAllData(map);
-            map = value;
-        }
+        List<K> map = GSON.fromJson(json, value.getClass().getGenericSuperclass());
         return map == null ? value : map;
     }
 
@@ -161,12 +152,7 @@ public class MultiDataUtil {
         final Context context = MultiDataManager.MANAGER.getContext();
         if (context == null || TextUtils.isEmpty(key) || TextUtils.isEmpty(table)) return value;
         String json = getSp(context, table).getString(key, "");
-        Set<K> map = GSON.fromJson(json, new TypeToken<Set<K>>() {
-        }.getType());
-        if (value instanceof IMultiCollection && map != null) {
-            ((IMultiCollection) value).putAllData(map);
-            map = value;
-        }
+        Set<K> map = GSON.fromJson(json, value.getClass().getGenericSuperclass());
         return map == null ? value : map;
     }
 
