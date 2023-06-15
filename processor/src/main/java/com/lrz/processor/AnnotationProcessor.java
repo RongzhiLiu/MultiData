@@ -109,22 +109,40 @@ public class AnnotationProcessor extends AbstractProcessor {
                                 }
                             }
                             Object value = null;
-                            if (method.getReturnType().toString().equals(boolean.class.getName()) || method.getReturnType().toString().equals(Boolean.class.getName())) {
+                            String returnType = method.getReturnType().toString();
+                            int index = returnType.indexOf('<');
+                            if (index > 0) {
+                                returnType = returnType.substring(0, index);
+                            }
+                            if (returnType.equals(boolean.class.getName()) || returnType.equals(Boolean.class.getName())) {
                                 value = get.defaultBoolean();
-                            } else if (method.getReturnType().toString().equals(int.class.getName()) || method.getReturnType().toString().equals(Integer.class.getName())) {
+                            } else if (returnType.equals(int.class.getName()) || returnType.equals(Integer.class.getName())) {
                                 value = get.defaultInt();
-                            } else if (method.getReturnType().toString().equals(float.class.getName()) || method.getReturnType().toString().equals(Float.class.getName())) {
+                            } else if (returnType.equals(float.class.getName()) || returnType.equals(Float.class.getName())) {
                                 value = get.defaultFloat();
-                            } else if (method.getReturnType().toString().equals(double.class.getName()) || method.getReturnType().toString().equals(Double.class.getName())) {
+                            } else if (returnType.equals(double.class.getName()) || returnType.equals(Double.class.getName())) {
                                 value = get.defaultDouble();
-                            } else if (method.getReturnType().toString().equals(long.class.getName()) || method.getReturnType().toString().equals(Long.class.getName())) {
+                            } else if (returnType.equals(long.class.getName()) || returnType.equals(Long.class.getName())) {
                                 value = get.defaultLong();
-                            } else if (method.getReturnType().toString().equals(String.class.getName())) {
+                            } else if (returnType.equals(String.class.getName())) {
                                 value = '"' + get.defaultString() + '"';
+                            } else if (returnType.equals(List.class.getName()) || returnType.equals(ArrayList.class.getName())) {
+                                value = "new " + MultiArrayList.class.getName() + "(\"" + table.name() + "\"," + "\"" + get.name() + "\")";
+                            } else if (returnType.equals(LinkedList.class.getName())) {
+                                value = "new " + MultiLinkedList.class.getName() + "(\"" + table.name() + "\"," + "\"" + get.name() + "\")";
+                            } else if (returnType.equals(Map.class.getName()) || returnType.equals(HashMap.class.getName())) {
+                                value = "new " + MultiHashMap.class.getName() + "(\"" + table.name() + "\"," + "\"" + get.name() + "\")";
+                            } else if (returnType.equals(Set.class.getName()) || returnType.equals(HashSet.class.getName())) {
+                                value = "new " + MultiHashSet.class.getName() + "(\"" + table.name() + "\"," + "\"" + get.name() + "\")";
+                            } else if (returnType.equals(TreeMap.class.getName())) {
+                                value = "new " + MultiTreeMap.class.getName() + "(\"" + table.name() + "\"," + "\"" + get.name() + "\")";
+                            } else if (returnType.equals(TreeSet.class.getName())) {
+                                value = "new " + MultiTreeSet.class.getName() + "(\"" + table.name() + "\"," + "\"" + get.name() + "\")";
                             }
                             if (!isDataClass) {
                                 fieldSpecHashMap.put(get.name(), buildField(ClassName.get(method.getReturnType()), get.name(), value));
                                 fieldValues.put(get.name(), value);
+                                System.out.println("---key=" + get.name() + "  " + value);
                             }
                         }
 

@@ -9,8 +9,8 @@ maven { url 'https://jitpack.io' }
 ```        
 ````java
 //depends
-api 'com.github.RongzhiLiu.MultiData:annotation:v1.0.7'
-annotationProcessor 'com.github.RongzhiLiu.MultiData:processor:v1.0.7'
+api 'com.github.RongzhiLiu.MultiData:annotation:v1.0.9'
+annotationProcessor 'com.github.RongzhiLiu.MultiData:processor:v1.0.9'
   //obfuscate
 -keep interface com.lrz.multi.Interface.** { *; }
 -keep class com.lrz.multi.Interface.** { *; }
